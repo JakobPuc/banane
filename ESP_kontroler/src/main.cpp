@@ -4,7 +4,6 @@
 
 uint8_t broadcastAddress[] = {0x98, 0xF4, 0xAB, 0x01, 0xC9, 0x68};
 
-
 typedef struct struct_message {
   int a;
   int b;
@@ -21,12 +20,13 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
   Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
 }
 
+int ADC_m(int x);
+
 void setup() {
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
 
   if (esp_now_init() != ESP_OK) {
-    Serial.println("Error initializing ESP-NOW");
     return;
   }
 
@@ -37,7 +37,6 @@ void setup() {
   peerInfo.encrypt = false;
 
   if (esp_now_add_peer(&peerInfo) != ESP_OK){
-    Serial.println("Failed to add peer");
     return;
   }
 
@@ -47,15 +46,15 @@ void setup() {
   pinMode(39,INPUT);
   pinMode(35,INPUT);
   pinMode(32,INPUT);
-  Serial.print("Jebi se");
 }
 
-void loop() {
+unsigned long cajt = 0;
 
-  myData.a = analogRead(33);
-  myData.b = analogRead(39);
-  myData.c = analogRead(35);
-  myData.d = analogRead(32);
+void loop() {
+  myData.a = ADC_m(analogRead(33));
+  myData.b = ADC_m(analogRead(39));
+  myData.c = ADC_m(analogRead(35));
+  myData.d = ADC_m(analogRead(32));
 
 
 
@@ -64,10 +63,16 @@ void loop() {
 
   if (result == ESP_OK) {
     Serial.println("Sent with success");
+    Serial.println(millis()-cajt);
+    cajt = millis();
   }
-  else {
-    Serial.println("Error sending the data");
-  }
+
    
-  delay(100);
+  delay(15);
+}
+
+
+int ADC_m(int x){
+  int y = map(x, 0, 4095, -100, 100);
+  return y;
 }

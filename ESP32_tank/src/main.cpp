@@ -23,6 +23,13 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
 void setup() {
   // Initialize Serial Monitor
   Serial.begin(115200);
+
+  pinMode(2,OUTPUT);
+  pinMode(0,OUTPUT);
+
+  digitalWrite(0,HIGH);
+  digitalWrite(2,LOW);
+
   
   // Set device as a Wi-Fi Station
   WiFi.mode(WIFI_STA);
@@ -39,5 +46,17 @@ void setup() {
 }
  
 void loop() {
-
+  /*if(myData.a > -11){
+    digitalWrite(2,HIGH);
+    digitalWrite(0,LOW);
+  }
+  else if (myData.a < -11)
+  {
+    digitalWrite(0,HIGH);
+    digitalWrite(2,LOW);
+  }
+  else{
+    digitalWrite(2,LOW);
+    digitalWrite(0,LOW);
+  }*/
 }
